@@ -50,6 +50,6 @@ IFS=';' read -ra COMMANDS_ARRAY <<< "$COMMANDS"
 
 #executes
 for I_COMMAND in "${COMMANDS_ARRAY[@]}"; do
-  printf 'execute %s\n' "${I_COMMAND}"
+  #printf 'execute %s\n' "${I_COMMAND}"
   helm ${I_COMMAND}
 done
