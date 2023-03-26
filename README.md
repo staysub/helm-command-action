@@ -1,4 +1,4 @@
-2# Helm command action
+# Helm command action
 
 This action executes any helm command supported, command FLAGS included
 1. OCI registries : ***Supported***
