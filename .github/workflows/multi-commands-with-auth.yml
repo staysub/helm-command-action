@@ -1,4 +1,4 @@
-name: 'Helm3 NO authentication pipeline'
+name: 'Helm3 with authentication and multiple charts pipeline'
 on:
   push:
     branches:
@@ -20,6 +20,8 @@ jobs:
           DEBUG: 1
           STORAGE: local
           STORAGE_LOCAL_ROOTDIR: /charts
+          BASIC_AUTH_USER: admin
+          BASIC_AUTH_PASS: test
         volumes:
           - /tmp:/charts
 
@@ -29,11 +31,10 @@ jobs:
       - name: 'Build docker image'
         run: 'docker build -t helm .'
 
-      - name: 'Test helm v3 version'
-        run: 'docker run --rm -i --entrypoint=helm helm version -c'
-
-      - name: 'Test helm v3 push'
+      - name: 'Test helm v3 push multiple'
         uses: ./
         env:
-          CHART_DIR_PATH_LIST: '.github/chart'
+          COMMANDS: 'inspect chart .github/chart;dependency update .github/chart'
           REGISTRY_URL: 'http://chartmuseum:8080'
+          REGISTRY_USER: 'admin'
+          REGISTRY_PASSWORD: 'test'

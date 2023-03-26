@@ -1,6 +1,6 @@
-# Helm push action
+2# Helm command action
 
-This action packages one or more helm charts and publish them to your chart registry
+This action executes any desired command you want after login in your registry
 1. OCI registries : ***Supported***
 2. Chartmusem : ***Supported***
 3. Should work for pretty much any other registry (if it doesn't, please open an issue)
@@ -23,7 +23,8 @@ jobs:
       - uses: actions/checkout@master
       - uses: staysub/helm-push-action@master
         env:
-          CHART_DIR_PATH_LIST: 'ecs-exporter'
+          COMMANDS: |
+                      helm template charts/my-chart-dir/.
           REGISTRY_URL: 'https://registry.url'
           REGISTRY_USER: ${{ secrets.REGISTRY_USER }} #NOT required if you helm repo does not need authorization
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }} #NOT required if you helm repo does not need authorization
@@ -40,7 +41,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: staysub/helm-push-action@master
         env:
-          CHART_DIR_PATH_LIST: 'parent-dir/sub-dir-with-chart:first-level-dir-with-chart:.dot-dir/my-chart-dir'
+          COMMANDS: 'parent-dir/sub-dir-with-chart:first-level-dir-with-chart:.dot-dir/my-chart-dir'
           REGISTRY_URL: 'europe-west1-docker.pkg.dev/my-project-id/my-image-registry/' #DO NOT add the oci protocol "oci://"
           REGISTRY_REPO_NAME: 'my-oci-helm-repo'
           OCI_ENABLED_REGISTRY: 'True'  #required for all OCI registries
@@ -57,7 +58,7 @@ otherwise, they'll be public to anyone browsing your repository.
 
 | Key                            | Value                                                                                                                                                        | Suggested Type | Required |
 |--------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------|
-| `CHART_DIR_PATH_LIST`          | One or more directories paths where Chart.yaml can be found. Paths are seperated by the character `:`                                                        | `env`          | **Yes**  |
+| `COMMANDS`          | One or more directories paths where Chart.yaml can be found. Paths are seperated by the character `:`                                                        | `env`          | **Yes**  |
 | `REGISTRY_URL`                 | Complete registry url. Avoid adding `oci://` protocol/prefix                                                                                                 | `env`          | **Yes**  |
 | `REGISTRY_REPO_NAME`           | Repo name. If emtpy a generic string will be used                                                                                                            | `env`          | No       |
 | `REGISTRY_USER`                | Username for registry                                                                                                                                        | `secret`       | No       |

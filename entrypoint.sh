@@ -3,8 +3,8 @@
 set -e
 set -x
 
-if [ -z "$CHART_DIR_PATH_LIST" ]; then
-  echo "CHART_DIR_PATH_LIST is not set. Quitting."
+if [ -z "$COMMANDS" ]; then
+  echo "COMMANDS is not set. Quitting."
   exit 1
 fi
 
@@ -46,44 +46,12 @@ if ! [ -z "$REGISTRY_USER" ]; then
   fi
 fi
 
-#read paths in array
-IFS=':' read -ra CHART_DIR_PATH_LIST_ARRAY <<< "$CHART_DIR_PATH_LIST"
+readarray -t COMMANDS_ARRAY <<< "$COMMANDS"
 
-TMP_DIR_PREFIX="/tmp/charts/"
-#Package all charts
-for I_CHART_DIR in "${CHART_DIR_PATH_LIST_ARRAY[@]}"; do
-  I_CHART_DIR_PATH="${I_CHART_DIR}"
-  printf '%s\n' "$I_CHART_DIR_PATH"
-  helm inspect chart ${I_CHART_DIR_PATH} ${HELM_INSPECT_FLAGS}
-  helm dependency update ${I_CHART_DIR_PATH} ${HELM_DEPENDENCY_UPDATE_FLAGS}
+IFS=';' read -ra COMMANDS_ARRAY <<< "$COMMANDS"
 
-  TMP_PACKAGE_DIR="${TMP_DIR_PREFIX}${I_CHART_DIR_PATH}"
-  mkdir -p ${TMP_PACKAGE_DIR}
-
-  helm package ${I_CHART_DIR_PATH} -d ${TMP_PACKAGE_DIR} ${HELM_PACKAGE_FLAGS}
-done
-
-COMPLETE_REGISTRY_URL="${PROTOCOL}${REGISTRY_URL}"
-
-HELM_SUPPORTS_PROTOCOL=1
-if [[ $COMPLETE_REGISTRY_URL == http:* ]]; then
-  HELM_SUPPORTS_PROTOCOL=0
-fi
-
-#push all generated charts
-for I_CHART_DIR in "${CHART_DIR_PATH_LIST_ARRAY[@]}"; do
-  I_CHART_DIR_PATH="${I_CHART_DIR}"
-  TMP_PACKAGE_DIR="${TMP_DIR_PREFIX}${I_CHART_DIR_PATH}"
-
-  for FILE_PATH in $(ls -1 ${TMP_PACKAGE_DIR}/*.tgz); do
-    if [[ "${OCI_ENABLED_REGISTRY}" == "True" ]]; then
-      helm push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS}
-    else
-      if ! [ -z "$REGISTRY_USER" ]; then
-        helm cm-push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD}  ${HELM_PUSH_FLAGS}
-      else
-        helm cm-push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS}
-      fi
-    fi
-  done
+#executes
+for I_COMMAND in "${COMMANDS_ARRAY[@]}"; do
+  printf 'execute %s\n' "${I_COMMAND}"
+  helm ${I_COMMAND}
 done

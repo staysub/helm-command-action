@@ -1,7 +1,7 @@
 FROM plugins/base:linux-amd64
 
 LABEL maintainer="Allan Ayamah <allan.ayamah@gmail.com>" \
-  org.label-schema.name="helm chart push" \
+  org.label-schema.name="helm command" \
   org.label-schema.vendor="Allan Ayamah" \
   org.label-schema.schema-version="1.0"
 

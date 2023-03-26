@@ -1,17 +1,16 @@
-name: 'Helm Package and Push Action'
-description: 'Package multiple helm charts and push them to any registry supported by helm'
+name: 'Helm command action'
+description: 'Issues helm commands against your repo'
 author: 'staysub'
 branding:
   color: 'blue'
   icon: 'upload-cloud'
 inputs:
-  CHART_DIR_PATH_LIST:
-    description: 'Multple dir. in your repo containing Chart.yaml you want packaged and pushed'
+  COMMANDS:
+    description: 'Multi line commands'
     required: true
   REGISTRY_URL:
     description: 'Url to your registry'
     required: true
-    
 runs:
   using: 'docker'
   image: 'Dockerfile'
