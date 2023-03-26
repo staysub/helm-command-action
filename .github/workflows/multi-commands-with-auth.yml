@@ -1,4 +1,4 @@
-name: 'Helm3 with authentication and multiple charts pipeline'
+name: Test helm dependency command
 on:
   push:
     branches:
