@@ -1,16 +1,11 @@
 name: Test helm dependency command
 on:
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
 
 jobs:
 
   test:
-    runs-on: 'ubuntu-20.04'
+    runs-on: ubuntu-latest
     services:
       chartmuseum:
         image: chartmuseum/chartmuseum:v0.12.0
@@ -31,7 +26,7 @@ jobs:
       - name: 'Build docker image'
         run: 'docker build -t helm .'
 
-      - name: 'Test helm v3 push multiple'
+      - name: 'Test helm inspect and dependency update'
         uses: ./
         env:
           COMMANDS: 'inspect chart .github/chart;dependency update .github/chart'
