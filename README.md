@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: staysub/helm-push-action@master
+      - uses: staysub/helm-command-action@master
         env:
           COMMANDS: |
                       helm template charts/my-chart-dir/.
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: staysub/helm-push-action@master
+      - uses: staysub/helm-command-action@master
         env:
           COMMANDS: 'parent-dir/sub-dir-with-chart:first-level-dir-with-chart:.dot-dir/my-chart-dir'
           REGISTRY_URL: 'europe-west1-docker.pkg.dev/my-project-id/my-image-registry/' #DO NOT add the oci protocol "oci://"
