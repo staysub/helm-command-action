@@ -46,8 +46,6 @@ if ! [ -z "$REGISTRY_USER" ]; then
   fi
 fi
 
-readarray -t COMMANDS_ARRAY <<< "$COMMANDS"
-
 IFS=';' read -ra COMMANDS_ARRAY <<< "$COMMANDS"
 
 #executes
